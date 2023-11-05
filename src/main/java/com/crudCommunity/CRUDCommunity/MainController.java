@@ -1,5 +1,6 @@
 package com.crudCommunity.CRUDCommunity;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -7,11 +8,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.jdbc.core.JdbcTemplate;
+
+import java.util.Map;
 
 @Controller
 @SpringBootApplication
 public class MainController {
 
+    MainModel mainModel = new MainModel();
     @GetMapping("/main")
     public String start()
     {
@@ -23,13 +28,13 @@ public class MainController {
         return "save.html";
     }
     @PostMapping("/save")
-    public String save(@RequestParam("memberEmail") String memberEmail,
-                       @RequestParam("memberPassword") String memberPassword,
-                       @RequestParam("memberName") String memberName)
+    public String save(@RequestParam("postWriter") String postWriter,
+                       @RequestParam("postPassword") String postPassword,
+                       @RequestParam("postTitle") String postTitle,
+                       @RequestParam("postText") String postText)
     {
-        System.out.println("email : " + memberEmail);
-        System.out.println("pwd : " + memberPassword);
-        System.out.println("name : " + memberName);
+        System.out.println("save");
+        mainModel.AddPost(postWriter,postPassword,postTitle,postText);
         return "redirect:/main";
     }
     public static void main(String[] args) {
