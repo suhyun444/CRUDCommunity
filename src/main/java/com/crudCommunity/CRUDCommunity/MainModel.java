@@ -17,7 +17,7 @@ public class MainModel {
         int index = (int)jdbcTemplate.queryForMap("select postAmount from communityinfo").get("postAmount");
         jdbcTemplate.update("INSERT INTO postlist VALUES(?,?,?,?,?)",index,postTitle,postWriter,postPassword,new java.sql.Timestamp(System.currentTimeMillis()));
         jdbcTemplate.update("INSERT INTO postinfo VALUES(?,?)",index,postText);
-        jdbcTemplate.update("update communityinfo set postNumber = ? where postNumber = ?",index + 1,index);
+        jdbcTemplate.update("update communityinfo set postAmount = ? where postAmount = ?",index + 1,index);
         System.out.println("success");
     }
 }

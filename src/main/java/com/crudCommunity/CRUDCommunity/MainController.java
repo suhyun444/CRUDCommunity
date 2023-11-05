@@ -1,5 +1,6 @@
 package com.crudCommunity.CRUDCommunity;
 
+import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.stereotype.Controller;
@@ -16,7 +17,8 @@ import java.util.Map;
 @SpringBootApplication
 public class MainController {
 
-    MainModel mainModel = new MainModel();
+    @Resource(name = "mainModel")
+    MainModel mainModel;
     @GetMapping("/main")
     public String start()
     {
