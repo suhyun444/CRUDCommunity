@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>게시판</title>
+    <style>
+        .post {
+            border: 1px solid #000;
+            margin: 10px;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="posts-container"></div>
+
+
+<script>
+    function renderPosts(titles) {
+        const postsContainer = document.getElementById('posts-container');
+        titles.forEach(title => {
+            const postDiv = document.createElement('div');
+            postDiv.classList.add('post');
+            postDiv.innerHTML = `
+                <h3>${title.postTitle}</h3>
+                <p>${title.postNumber}</p>
+                <p>${title.postWriter}</p>
+                <p>${title.uploadDate}</p>
+            `;
+            postsContainer.appendChild(postDiv);
+        });
+    }
+    var postId = window.location.pathname.split("/").pop();
+    fetch('http://localhost:8080/postlistinfo/' + postId)
+        .then(response => response.json())
+        .then(data => renderPosts(data))
+        .catch(error => console.error('데이터를 불러오는 중 에러 발생:', error));
+</script>
+
+</body>
+</html>
