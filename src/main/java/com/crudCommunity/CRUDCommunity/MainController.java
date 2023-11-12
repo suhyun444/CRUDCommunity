@@ -37,7 +37,7 @@ public class MainController {
     {
         System.out.println("write");
         mainModel.AddPost(postWriter,postPassword,postTitle,postText);
-        return "redirect:/main";
+        return "redirect:postlist/0";
     }
     @GetMapping("postlist")
     public String GetPostList()
@@ -56,13 +56,6 @@ public class MainController {
     {
         System.out.println("db open");
         List<Title> result = mainModel.GetPosts(pageNumber);
-        for (int i=0;i<result.size();++i  )
-        {
-            System.out.println(result.get(i).postNumber);
-            System.out.println(result.get(i).postWriter);
-            System.out.println(result.get(i).postTitle);
-            System.out.println(result.get(i).uploadDate);
-        }
         return result;
     }
 

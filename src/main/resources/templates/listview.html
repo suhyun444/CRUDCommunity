@@ -4,15 +4,44 @@
     <title>게시판</title>
     <style>
         .post {
-            border: 1px solid #000;
-            margin: 10px;
-            padding: 10px;
+            border-bottom: 1px solid #000000;
+            margin: 5px;
+            padding: 5px;
         }
+        .frame{
+            text-align:center;
+            width : 900px;
+            height : 1800px;
+            margin:auto;
+            border: 1px solid #000000;
+            background-color: #FFFFFF;
+        }
+        .cover{
+            text-align:center;
+            width : 900px;
+            height : 150px;
+            margin:auto;
+            border: 1px solid #000000;
+            background-color: #FFFFFF;
+        }
+        .bg{
+            background-color: #787878;
+        }
+
     </style>
 </head>
 <body>
 
-<div id="posts-container"></div>
+<div id="main-bg" class="bg">
+    <div id="posts-cover" class="cover">
+        <h1 style="height=150px">게시판</h1>
+        <button type="button" onclick="location.href='http://localhost:8080/write'" style="cursor:pointer;margin-top:20px;margin-left:780px;width:80px;height:30px;">글 쓰기</button>
+    </div>
+    <div id="posts-frame" class="frame">
+        <div id="posts-container">
+        </div>
+    </div>
+</div>
 
 
 <script>
@@ -22,11 +51,10 @@
             const postDiv = document.createElement('div');
             postDiv.classList.add('post');
             postDiv.innerHTML = `
-                <h3>${title.postTitle}</h3>
-                <p>${title.postNumber}</p>
-                <p>${title.postWriter}</p>
-                <p>${title.uploadDate}</p>
-            `;
+            <span style="display:inline-block; width:50px; text-align:center;">${title.postNumber}</span>
+            <span style="display:inline-block; width:525px;text-align:left;">${title.postTitle} </span>
+            <span style="display:inline-block; width:225px;text-align:left;">${title.postWriter}</span>
+            <span style="display:inline-block; width:50px;text-align:center;">${title.uploadDate}</span>`;
             postsContainer.appendChild(postDiv);
         });
     }

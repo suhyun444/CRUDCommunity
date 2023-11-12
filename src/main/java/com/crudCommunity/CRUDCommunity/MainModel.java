@@ -36,7 +36,7 @@ public class MainModel {
             tmp.postNumber = (int)cur.get("postNumber");
             tmp.postTitle = (String)cur.get("postTitle");
             tmp.postWriter = (String)cur.get("postWriter");
-            tmp.uploadDate = Timestamp.valueOf((LocalDateTime) cur.get("uploadDate"));
+            tmp.SetUploadDate(Timestamp.valueOf((LocalDateTime)cur.get("uploadDate")));
             ret.add(tmp);
         }
         return ret;
