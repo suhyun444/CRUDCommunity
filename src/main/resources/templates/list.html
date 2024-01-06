@@ -9,7 +9,6 @@
             padding: 5px;
         }
         .frame{
-            text-align:center;
             width : 900px;
             height : 1800px;
             margin:auto;
@@ -25,7 +24,7 @@
             background-color: #FFFFFF;
         }
         .bg{
-            background-color: #787878;
+            background-color: #dcdcdc;
         }
 
     </style>
@@ -50,19 +49,18 @@
         titles.forEach(title => {
             const postDiv = document.createElement('div');
             postDiv.classList.add('post');
+            postDiv.setAttribute("onclick", "location.href='http://localhost:8080/post/" + title.postNumber+"'");
+            postDiv.style.cssText = 'cursor:pointer;';
             postDiv.innerHTML = `
-            <span style="display:inline-block; width:50px; text-align:center;">${title.postNumber}</span>
-            <span style="display:inline-block; width:525px;text-align:left;">${title.postTitle} </span>
-            <span style="display:inline-block; width:225px;text-align:left;">${title.postWriter}</span>
-            <span style="display:inline-block; width:50px;text-align:center;">${title.uploadDate}</span>`;
+            <span style="display:inline-block; width:40px; text-align:center;">${title.postNumber}</span><span style="display:inline-block; width:525px;text-align:left;">${title.postTitle}</span><span style="display:inline-block; width:215px;text-align:left;">${title.postWriter}</span><span style="display:inline-block; width:100px;text-align:center;">${title.uploadDate}</span>`;
             postsContainer.appendChild(postDiv);
         });
     }
-    var postId = window.location.pathname.split("/").pop();
-    fetch('http://localhost:8080/postlistinfo/' + postId)
+    var pageNumber = window.location.pathname.split("/").pop();
+    fetch('http://localhost:8080/postlistinfo/' + pageNumber)
         .then(response => response.json())
         .then(data => renderPosts(data))
-        .catch(error => console.error('데이터를 불러오는 중 에러 발생:', error));
+        .catch(error => console.error('erro', error));
 </script>
 
 </body>

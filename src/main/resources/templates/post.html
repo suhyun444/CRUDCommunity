@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        .title-frame {
+            border-top: 1px solid #000000;
+            border-bottom: 1px solid #000000;
+            background-color: #bbbbbb;
+            margin-top: 15px;
+            padding: 10px;
+        }
+        .info-frame{
+            border-bottom: 1px solid #000000;
+            padding: 5px;
+        }
+        .text-frame{
+            border-bottom: 1px solid #bfbfbf;
+            margin-top: 15px;
+            margin-bottom: 15px;
+            padding: 5px;
+            padding-bottom: 50px;
+        }
+        .frame{
+            width : 900px;
+            height : 1800px;
+            margin:auto;
+            border: 1px solid #000000;
+            background-color: #FFFFFF;
+        }
+        .cover{
+            text-align:center;
+            width : 900px;
+            height : 150px;
+            margin:auto;
+            border: 1px solid #000000;
+            background-color: #FFFFFF;
+        }
+        .bg{
+            background-color: #dcdcdc;
+        }
+    </style>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div id="main-bg" class="bg">
+    <div id="posts-cover" class="cover">
+        <h1 style="height=150px">게시판</h1>
+    </div>
+    <div id="posts-frame" class="frame">
+        <div style="margin-left:15px;margin-right:15px;width:870px">
+            <div id="post-container">
+            </div>
+            <div id="comment-container">
+            </div>
+            <div id="write-comment-container" style="width:100%;height:250px">
+            <textarea id="comment" name="comment" placeholder="댓글 입력" spellcheck="false" style="resize:none;box-sizing:border-box;padding:5px;width:100%;height:200px"></textarea>
+                <div id="write-comment-button-container" style="width:20%;height:50px;box-sizing:border-box;display:flex;margin-left:auto;">
+                    <button style="width:100%;text-align:center;" onclick="writeComment()">작성</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    function renderPosts(post)
+    {
+        console.log("renderPosts");
+        const postContainer = document.getElementById('post-container');
+        const postDiv = document.createElement('div');
+        postDiv.innerHTML = `
+        <div class="title-frame" style="text-align:left;font-size:20px;"> ${post.title}</div>
+        <div class="info-frame">
+        <span style="font-size:15px;display:inline-block;width:430px; text-align:left;">${post.writer}</span><span style="font-size:15px;display:inline-block; width:430px;text-align:right;">${post.uploadDate}</span>
+        </div>
+        <div class="text-frame">
+        <span style="display:inline-block;text-align:left;">${post.text} </span>
+        </div>`;
+        postContainer.appendChild(postDiv);
+    }
+    function renderComments(comments)
+    {
+        console.log("renderComments");
+        const commentContainer = document.getElementById('comment-container');
+        comments.foreach(comment=>{
+            const commentDiv = document.createElement('div');
+
+        });
+    }
+    function writeComment()
+    {
+        var postNumber = window.location.pathname.split("/").pop();
+        const comment = document.getElementById("comment").value;
+        var data = {
+            "postNumber" : postNumber,
+            "comment": comment
+        };
+        fetch("http://localhost:8080/writecomment",{method:"POST",headers:{"Content-Type":"application/json"},body: JSON.stringify(data)})
+            .then(response => response.json())
+            .then(data => console.log(data))
+            .catch(error => console.error(error));
+
+    }
+    var postId = window.location.pathname.split("/").pop();
+    fetch("http://localhost:8080/postinfo/"+postId)
+        .then(response => response.json())
+        .then(data => renderPosts(data))
+        .catch(error => console.error('error', error));
+    fetch("http://localhost:8080/commentinfo/"+postId)
+        .then(response => response.json())
+        .then(data => renderComments(data))
+        .catch(error => console.error('error',error));
+</script>
+</body>
+</html>

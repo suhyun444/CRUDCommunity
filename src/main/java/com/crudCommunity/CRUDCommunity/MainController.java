@@ -3,6 +3,7 @@ package com.crudCommunity.CRUDCommunity;
 import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -19,10 +20,10 @@ public class MainController {
 
     @Resource(name = "mainModel")
     MainModel mainModel;
-    @GetMapping("main")
+    @GetMapping("")
     public String start()
     {
-        return "index";
+        return "redirect:postlist/0";
     }
 	@GetMapping("write")
     public String writeForm()
@@ -48,25 +49,40 @@ public class MainController {
     public String GetPostListPage(@PathVariable int pageNumber)
     {
         System.out.println("postlist open");
-        return "listview";
+        return "list";
     }
     @ResponseBody
     @GetMapping("postlistinfo/{pageNumber}")
     public List<Title> GetPostListInfo(@PathVariable int pageNumber)
     {
         System.out.println("db open");
-        List<Title> result = mainModel.GetPosts(pageNumber);
+        List<Title> result = mainModel.GetPostList(pageNumber);
+        return result;
+    }
+    @ResponseBody
+    @GetMapping("postinfo/{postId}")
+    public Post GetPostInfo(@PathVariable int postId)
+    {
+        System.out.println("db open");
+        Post result = mainModel.GetPost(postId);
         return result;
     }
 
     @GetMapping("post/{postNumber}")
     public String GetPost(@PathVariable int postNumber)
     {
-        return "redirect:/main";
+        return "post";
+    }
+    @PostMapping("writecomment")
+    public ResponseEntity<Comment> WriteComment(@RequestBody Comment comment)
+    {
+        mainModel.AddComment(comment.postNumber,comment.comment);
+        return new ResponseEntity<>(comment,HttpStatus.CREATED);
     }
     public static void main(String[] args) {
         SpringApplication.run(MainController.class, args);
     }
+
 
 
 }

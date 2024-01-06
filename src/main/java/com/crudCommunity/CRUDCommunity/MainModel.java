@@ -24,11 +24,19 @@ public class MainModel {
         jdbcTemplate.update("update communityinfo set postAmount = ? where postAmount = ?",index + 1,index);
         System.out.println("success");
     }
-    public List<Title> GetPosts(int pageNumber)
+    public void AddComment(int postNumber, String comment)
     {
-        int l = pageNumber * 10;
-        int r = (pageNumber + 1) * 10 - 1;
-        List<Map<String, Object>> result =  jdbcTemplate.queryForList("select postNumber,postTitle,postWriter,uploadDate from postlist where postNumber between ? and ?",l,r);
+        int index = (int)jdbcTemplate.queryForMap("select commentAmount from communityinfo").get("commentAmount");
+        jdbcTemplate.update("INSERT INTO commentinfo VALUES(?,?,?,?)",index,postNumber,comment,new java.sql.Timestamp(System.currentTimeMillis()));
+        jdbcTemplate.update("update communityinfo set commentAmount = ? where commentAmount = ?",index + 1,index);
+        System.out.println("success");
+    } 
+    public List<Title> GetPostList(int pageNumber)
+    {
+        int postCount = (int)jdbcTemplate.queryForMap("select postAmount from communityinfo").get("postAmount");
+        int l = postCount - 10;
+        int r = postCount - 1;
+        List<Map<String, Object>> result =  jdbcTemplate.queryForList("select postNumber,postTitle,postWriter,uploadDate from postlist where postNumber between ? and ? order by postNumber desc",l,r);
         List<Title> ret = new ArrayList<Title>();
         for (Map<String,Object> cur : result)
         {
@@ -41,4 +49,15 @@ public class MainModel {
         }
         return ret;
     }
+    public Post GetPost(int postId)
+    {
+        Map<String, Object> result =  jdbcTemplate.queryForMap("select postlist.postTitle,postlist.postWriter,postlist.uploadDate,postinfo.postText from postlist join postinfo on postlist.postNumber = postinfo.postNumber where postlist.postNumber = ?",postId);
+        Post ret = new Post();
+        ret.title = (String) result.get("postTitle");
+        ret.writer = (String) result.get("postWriter");
+        ret.text = (String) result.get("postText");
+        ret.SetUploadDate(Timestamp.valueOf((LocalDateTime)result.get("uploadDate")));
+        return ret;
+    }
+
 }

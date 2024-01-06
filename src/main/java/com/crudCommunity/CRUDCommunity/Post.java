@@ -2,11 +2,11 @@ package com.crudCommunity.CRUDCommunity;
 
 import java.sql.Timestamp;
 
-public class Title {
-    public int postNumber;
-    public String postTitle;
-    public String postWriter;
+public class Post {
+    public String title;
+    public String writer;
     public String uploadDate;
+    public String text;
     public void SetUploadDate(Timestamp date)
     {
         String currentTime = new java.sql.Timestamp(System.currentTimeMillis()).toString();
