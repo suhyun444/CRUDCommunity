@@ -67,6 +67,24 @@ public class MainController {
         Post result = mainModel.GetPost(postId);
         return result;
     }
+    @ResponseBody
+    @GetMapping("commentinfo/{postId}")
+    public List<Comment> GetCommentInfo(@PathVariable int postId)
+    {
+        System.out.println("db open");
+        List<Comment> result = mainModel.GetCommentList(postId);
+        return result;
+    }
+    @ResponseBody
+    @GetMapping("getpassword/{postId}")
+    public String GetPassword(@PathVariable int postId)
+    {
+        System.out.println("getpassword");
+        //return mainModel.GetPassword(postId);
+        String result = mainModel.GetPassword(postId);
+        System.out.println(result);
+        return result;
+    }
 
     @GetMapping("post/{postNumber}")
     public String GetPost(@PathVariable int postNumber)
@@ -78,6 +96,12 @@ public class MainController {
     {
         mainModel.AddComment(comment.postNumber,comment.comment);
         return new ResponseEntity<>(comment,HttpStatus.CREATED);
+    }
+    @PostMapping("deletepost")
+    public ResponseEntity<Integer> DeletePost(@RequestParam int postNumber)
+    {
+        mainModel.DeletePost(postNumber);
+        return new ResponseEntity<>(postNumber,HttpStatus.CREATED); 
     }
     public static void main(String[] args) {
         SpringApplication.run(MainController.class, args);

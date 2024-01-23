@@ -49,6 +49,28 @@ public class MainModel {
         }
         return ret;
     }
+    public String GetPassword(int postId)
+    {
+        return (String)(jdbcTemplate.queryForMap("select postPassword from postlist where postNumber = ?",postId).get("postPassword"));
+    }
+    public void DeletePost(int postNumber)
+    {
+        jdbcTemplate.execute("delete from postlist where postNumber = "+postNumber);
+    }
+    public List<Comment> GetCommentList(int postNumber)
+    {
+        List<Map<String, Object>> result =  jdbcTemplate.queryForList("select postNumber,comment,writeTime from commentinfo where postNumber = ?",postNumber);
+        List<Comment> ret = new ArrayList<Comment>();
+        for (Map<String,Object> cur : result)
+        {
+            Comment tmp = new Comment();
+            tmp.postNumber = (int)cur.get("postNumber");
+            tmp.comment = (String)cur.get("comment");
+            tmp.SetUploadDate(Timestamp.valueOf((LocalDateTime)cur.get("writeTime")));
+            ret.add(tmp);
+        }
+        return ret;
+    }
     public Post GetPost(int postId)
     {
         Map<String, Object> result =  jdbcTemplate.queryForMap("select postlist.postTitle,postlist.postWriter,postlist.uploadDate,postinfo.postText from postlist join postinfo on postlist.postNumber = postinfo.postNumber where postlist.postNumber = ?",postId);

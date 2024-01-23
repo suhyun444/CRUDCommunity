@@ -38,6 +38,26 @@
         .bg{
             background-color: #dcdcdc;
         }
+        .box-container{
+            position:relative;
+            cursor:pointer;
+            font-size:12px;
+            display:inline-block;
+            text-align:center;
+            user-select:none;
+        }
+        .overlay-box{
+            position:absolute;
+            top:110%;
+            right:-25%;
+            display:none;
+            background-color:#fff;
+            border:1px solid #000;
+            color:#000;
+            width:170px;
+            height:30px;
+            pointer-events: none;
+        }
     </style>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -54,7 +74,7 @@
             </div>
             <div id="comment-container">
             </div>
-            <div id="write-comment-container" style="width:100%;height:250px">
+            <div id="write-comment-container" style="margin-top:30px;width:100%;height:250px">
             <textarea id="comment" name="comment" placeholder="댓글 입력" spellcheck="false" style="resize:none;box-sizing:border-box;padding:5px;width:100%;height:200px"></textarea>
                 <div id="write-comment-button-container" style="width:20%;height:50px;box-sizing:border-box;display:flex;margin-left:auto;">
                     <button style="width:100%;text-align:center;" onclick="writeComment()">작성</button>
@@ -74,7 +94,7 @@
         postDiv.innerHTML = `
         <div class="title-frame" style="text-align:left;font-size:20px;"> ${post.title}</div>
         <div class="info-frame">
-        <span style="font-size:15px;display:inline-block;width:430px; text-align:left;">${post.writer}</span><span style="font-size:15px;display:inline-block; width:430px;text-align:right;">${post.uploadDate}</span>
+        <span style="font-size:12px;display:inline-block;width:690px; text-align:left;">${post.writer}</span><span class="box-container" style="width:50px;" onclick="openBox(1)">수정<div class="overlay-box" id="overlayBox1"><input type="text" id="password1" style="display:flex;width:100px;margin:5px;pointer-events:auto;"placeholder="비밀번호 입력"onclick="stopPropagation()"><button style="width:50px;pointer-events:auto;text-align:center;font-size:12px;margin:5px;" onclick="toEditPage()">확인</button></div></span><span class="box-container" style="width:48px;border-left:1px solid black;border-right:1px solid black;" onclick="openBox(2)">삭제<div class="overlay-box" id="overlayBox2"><input type="text" id="password2" style="display:flex;width:100px;margin:5px;pointer-events:auto;"placeholder="비밀번호 입력"onclick="stopPropagation()"><button style="width:50px;pointer-events:auto;text-align:center;font-size:12px;margin:5px;" onclick="toDeletePage()">확인</button></div></span><span style="font-size:12px;display:inline-block; width:70px;text-align:right;">${post.uploadDate}</span>
         </div>
         <div class="text-frame">
         <span style="display:inline-block;text-align:left;">${post.text} </span>
@@ -84,25 +104,106 @@
     function renderComments(comments)
     {
         console.log("renderComments");
+        let commentWrapper = document.getElementById('comment-wrapper')
+        if(commentWrapper != null)commentWrapper.remove();
         const commentContainer = document.getElementById('comment-container');
-        comments.foreach(comment=>{
-            const commentDiv = document.createElement('div');
-
+        commentWrapper = document.createElement('div');
+        commentWrapper.id = 'comment-wrapper';
+        commentContainer.appendChild(commentWrapper);
+        comments.forEach(comment => {
+            const postDiv = document.createElement('div');
+            postDiv.style.cssText = 'border-bottom:1px solid #000000; margin-top:15px;'
+            postDiv.innerHTML = `
+            <span style="display:inline-block; width:700px; text-align:left;">${comment.comment}</span><span style="display:inline-block; width:170px;text-align:right;">${comment.uploadDate}</span>`;
+            commentWrapper.appendChild(postDiv);
         });
-    }
+    } 
     function writeComment()
     {
         var postNumber = window.location.pathname.split("/").pop();
-        const comment = document.getElementById("comment").value;
+        const commentInputForm = document.getElementById("comment");
+        const comment = commentInputForm.value;
         var data = {
             "postNumber" : postNumber,
             "comment": comment
         };
-        fetch("http://localhost:8080/writecomment",{method:"POST",headers:{"Content-Type":"application/json"},body: JSON.stringify(data)})
-            .then(response => response.json())
-            .then(data => console.log(data))
-            .catch(error => console.error(error));
-
+        commentInputForm.value = "";
+        updateAndRefresh(data);
+    }
+    function openBox(number)
+    {
+        const overlayBox = document.getElementById('overlayBox'+number);
+        const anotherBox = document.getElementById('overlayBox'+((number == 1)?'2':'1'));
+        overlayBox.style.display = (overlayBox.style.display == '') ? 'flex' : '';
+        anotherBox.style.display = '';
+    }
+    async function getPassword()
+    {
+        console.log(postId);
+        
+        try
+        {
+            const passwordData = await fetch("http://localhost:8080/getpassword/"+postId);
+            const data = await passwordData.json();
+            return data;
+        }
+        catch(error)
+        {
+            console.error(error);
+        }
+    }
+    async function toEditPage()
+    {
+        const input = document.getElementById("password1").value;
+        let password;
+        const funcResponse = await getPassword().then(data => {password = data; console.log(data);})
+        if(input != password)
+        {
+            console.log("not correct");
+            return;
+        }
+        location.href='http://localhost:8080/postlist/0';
+    }
+    async function toDeletePage()
+    {
+        const input = document.getElementById("password2").value;
+        let password;
+        const funcResponse = await getPassword().then(data => {password = data; console.log(data);})
+        if(input != password)
+        {
+            console.log("not correct");
+            return;
+        }
+        console.log("ToDelete");
+        try
+        {
+            const sendingData = {postNumber:postId};
+            const response = await fetch("http://localhost:8080/deletepost",{method:"POST",headers:{'Content-Type':'application/x-www-form-urlencoded'},body: new URLSearchParams(sendingData)});
+            console.log(response);
+            location.href='http://localhost:8080/postlist/0';
+        }
+        catch(error)
+        {
+            console.error(error);
+        }
+    }
+    function stopPropagation()
+    {
+        event.stopPropagation();
+    }
+    async function updateAndRefresh(commentData)
+    {
+        try
+        {
+            await fetch("http://localhost:8080/writecomment",{method:"POST",headers:{"Content-Type":"application/json"},body: JSON.stringify(commentData)});
+            const refresh = await fetch("http://localhost:8080/commentinfo/"+postId);
+            const data = await refresh.json();
+            renderComments(data);
+        }
+        catch(error)
+        {
+            console.error(error);
+        }
     }
     var postId = window.location.pathname.split("/").pop();
     fetch("http://localhost:8080/postinfo/"+postId)
@@ -112,7 +213,7 @@
     fetch("http://localhost:8080/commentinfo/"+postId)
         .then(response => response.json())
         .then(data => renderComments(data))
-        .catch(error => console.error('error',error));
+        .catch(error => console.error('error', error));
 </script>
 </body>
 </html>
