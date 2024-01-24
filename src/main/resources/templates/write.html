@@ -1,19 +1,61 @@
+
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Sign In</title>
+    <title>게시판</title>
+    <style>
+        .post {
+            border-bottom: 1px solid #000000;
+            margin: 5px;
+            padding: 5px;
+        }
+        .frame{
+            width : 900px;
+            height : 1800px;
+            margin:auto;
+            border: 1px solid #000000;
+            background-color: #FFFFFF;
+        }
+        .cover{
+            text-align:center;
+            width : 900px;
+            height : 150px;
+            margin:auto;
+            border: 1px solid #000000;
+            background-color: #FFFFFF;
+        }
+        .bg{
+            background-color: #dcdcdc;
+        }
+
+    </style>
 </head>
 <body>
-<form action="/write" method="post">
-    <fieldset>
-        <legend>정보 입력</legend>
-        작성자 : <input type="text" name="postWriter"><br>
-        비밀번호 : <input type="password" name="postPassword"><br>
-        제목 : <input type="text" name="postTitle"><br>
-        본문 : <input type="text" size="10" name="postText"><br>
-        <input type="submit" value="회원 가입">
-    </fieldset>
-</form>
+
+<div id="main-bg" class="bg">
+    <div id="posts-cover" class="cover">
+        <h1 style="height:150px">게시판</h1>
+    </div>
+    <div id="write-frame" class="frame">
+        <div style="margin: 15px; margin-top: 50px; width: 900px; height: 1800px;">
+            <div id="writer-password-frame" style="display: flex; flex-direction: row; width: 900px; height: 30px;line-height:30px">
+                <div id="writer-info" style="width:50px;border:2px solid black;background-color:#dcdcdc;text-align:center;font-size:12px;">작성자</div>
+                <input type="text" id="writer" style="width:250px;border:2px solid black;border-left:0px;">
+                <div id="password-info" style="margin-left:10px;width:75px;border:2px solid black; background-color:#dcdcdc;text-align:center;font-size:12px;">비밀번호</div>
+                <input type="text" id="password" style="width:200px;border:2px solid black;border-left:0px;">
+            </div>
+            <div id="title-frame" style="margin-top:7px;display: flex; flex-direction: row; width: 900px; height:30px; line-height:30px">
+                <div id="title-info" style="width:50px;border:2px solid black; background-color:#dcdcdc;text-align:center;font-size:12px;">제목</div>
+                <input type="text" id="title" style="width:800px;border:2px solid black;border-left:0px;">
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+</script>
+
 </body>
 </html>
