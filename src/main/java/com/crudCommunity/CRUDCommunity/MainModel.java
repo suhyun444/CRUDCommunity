@@ -78,5 +78,10 @@ public class MainModel {
         ret.SetUploadDate(Timestamp.valueOf((LocalDateTime)result.get("uploadDate")));
         return ret;
     }
+    public void EditPost(Post post)
+    {
+        jdbcTemplate.execute("update postlist set postTitle = "+post.title+" where postNumber = "+post.number);
+        jdbcTemplate.execute("update postinfo set postText = "+post.text+" where postNumber = "+post.number);
+    }
 
 }

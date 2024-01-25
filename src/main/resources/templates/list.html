@@ -38,6 +38,9 @@
     </div>
     <div id="posts-frame" class="frame">
         <div id="posts-container">
+            <div id="post-info" style="background-color:#ececec;margin:0px;padding:10px;border-bottom:1px solid #000000;">
+                <span style="display:inline-block; width:80px; text-align:center;">번호</span><span style="display:inline-block; width:485px;text-align:left;">제목</span><span style="display:inline-block; width:215px;text-align:left;">작성자</span><span style="display:inline-block; width:100px;text-align:center;">작성일</span>
+            </div>
         </div>
     </div>
 </div>
@@ -52,7 +55,7 @@
             postDiv.setAttribute("onclick", "location.href='http://localhost:8080/post/" + title.postNumber+"'");
             postDiv.style.cssText = 'cursor:pointer;';
             postDiv.innerHTML = `
-            <span style="display:inline-block; width:40px; text-align:center;">${title.postNumber}</span><span style="display:inline-block; width:525px;text-align:left;">${title.postTitle}</span><span style="display:inline-block; width:215px;text-align:left;">${title.postWriter}</span><span style="display:inline-block; width:100px;text-align:center;">${title.uploadDate}</span>`;
+            <span style="display:inline-block; width:80px; text-align:center;">${title.postNumber}</span><span style="display:inline-block; width:485px;text-align:left;">${title.postTitle}</span><span style="display:inline-block; width:215px;text-align:left;">${title.postWriter}</span><span style="display:inline-block; width:100px;text-align:center;">${title.uploadDate}</span>`;
             postsContainer.appendChild(postDiv);
         });
     }

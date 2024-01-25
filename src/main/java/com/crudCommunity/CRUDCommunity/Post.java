@@ -3,6 +3,7 @@ package com.crudCommunity.CRUDCommunity;
 import java.sql.Timestamp;
 
 public class Post {
+    public int number;
     public String title;
     public String writer;
     public String uploadDate;

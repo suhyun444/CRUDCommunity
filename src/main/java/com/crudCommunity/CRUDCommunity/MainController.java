@@ -30,13 +30,18 @@ public class MainController {
     {
         return "write";
     }
-    @PostMapping("addpost")
-    public String write(@RequestBody Post post)
+
+    @GetMapping("post/{postNumber}")
+    public String GetPostPage(@PathVariable int postNumber)
     {
-        System.out.println("write");
-        mainModel.AddPost(post);
-        return "redirect:postlist/0";
+        return "post";
     }
+    @GetMapping("edit/{postNumber}")
+    public String EditPostPage(@PathVariable int postNumber)
+    {
+        return "edit";
+    }
+
     @GetMapping("postlist")
     public String GetPostList()
     {
@@ -83,11 +88,6 @@ public class MainController {
         return result;
     }
 
-    @GetMapping("post/{postNumber}")
-    public String GetPost(@PathVariable int postNumber)
-    {
-        return "post";
-    }
     @PostMapping("writecomment")
     public ResponseEntity<Comment> WriteComment(@RequestBody Comment comment)
     {
@@ -99,6 +99,19 @@ public class MainController {
     {
         mainModel.DeletePost(postNumber);
         return new ResponseEntity<>(postNumber,HttpStatus.CREATED); 
+    }
+    
+    @PostMapping("addpost")
+    public ResponseEntity<Post> write(@RequestBody Post post) {
+        System.out.println("write");
+        mainModel.AddPost(post);
+        return new ResponseEntity<>(post, HttpStatus.CREATED);
+    }
+    @PostMapping("editpost")
+    public ResponseEntity<Post> EditPost(@RequestBody Post post)
+    {
+        mainModel.EditPost(post);
+        return new ResponseEntity<>(post,HttpStatus.CREATED);
     }
     public static void main(String[] args) {
         SpringApplication.run(MainController.class, args);

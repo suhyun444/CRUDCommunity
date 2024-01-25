@@ -1,0 +1,89 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>게시판</title>
+    <style>
+        .post {
+            border-bottom: 1px solid #000000;
+            margin: 5px;
+            padding: 5px;
+        }
+        .frame{
+            width : 900px;
+            height : 1800px;
+            margin:auto;
+            border: 1px solid #000000;
+            background-color: #FFFFFF;
+        }
+        .cover{
+            text-align:center;
+            width : 900px;
+            height : 150px;
+            margin:auto;
+            border: 1px solid #000000;
+            background-color: #FFFFFF;
+        }
+        .bg{
+            background-color: #dcdcdc;
+        }
+
+    </style>
+</head>
+<body>
+
+<div id="main-bg" class="bg">
+    <div id="posts-cover" class="cover">
+        <h1 style="height:50px">게시판</h1>
+    </div>
+    <div id="write-frame" class="frame">
+        <div style="margin: 15px; margin-top: 50px; width: 900px; height: 1800px;">
+            <div id="title-frame" style="margin-top:7px;display: flex; flex-direction: row; width: 870px; height:30px; line-height:30px">
+                <div id="title-info" style="box-sizing:border-box;width:50px;border:1px solid #8f8f8f; background-color:#dcdcdc;text-align:center;font-size:12px;">제목</div>
+                <input type="text" id="title" style="box-sizing:border-box;width:820px;border:1px solid #8f8f8f;border-left:0px;">
+            </div>
+            <div style="width:870px;;height:500px">
+                <textarea id="text" placeholder="본문 입력" spellcheck="false" style="margin-top:10px;resize:none;box-sizing:border-box;padding:5px;width:870px;height:400px"></textarea>
+                <div id="write-comment-button-container" style="width:150px;height:50px;box-sizing:border-box;display:flex;margin-left:auto;">
+                    <button style="width:100%;text-align:center;" onclick="writePost()">작성</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    async function writePost()
+    {
+        try
+        {
+            const title = document.getElementById("title").value;
+            const text = document.getElementById("text").value;
+            const data = {
+                "number":postId,
+                "title":title,
+                "text":text
+            };
+            await fetch("http://localhost:8080/editpost",{method:"POST",headers:{"Content-Type":"application/json"},body: JSON.stringify(data)});
+            location.href='http://localhost:8080/postlist/0';
+        }
+        catch(error)
+        {
+            console.error(error);
+        }
+    }
+    function render(data)
+    {
+        document.getElementById("title").value = data.title;
+        document.getElementById("text").value = data.text;
+    }
+    var postId = window.location.pathname.split("/").pop();
+    fetch("http://localhost:8080/postinfo/"+postId)
+        .then(response => response.json())
+        .then(data => render(data))
+        .catch(error => console.error(error));
+</script>
+
+</body>
+</html>
