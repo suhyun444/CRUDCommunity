@@ -16,11 +16,11 @@ import java.util.Map;
 public class MainModel {
     @Autowired
     private JdbcTemplate jdbcTemplate;
-    public void AddPost(String postWriter, String postPassword, String postTitle, String postText)
+    public void AddPost(Post post)
     {
         int index = (int)jdbcTemplate.queryForMap("select postAmount from communityinfo").get("postAmount");
-        jdbcTemplate.update("INSERT INTO postlist VALUES(?,?,?,?,?)",index,postTitle,postWriter,postPassword,new java.sql.Timestamp(System.currentTimeMillis()));
-        jdbcTemplate.update("INSERT INTO postinfo VALUES(?,?)",index,postText);
+        jdbcTemplate.update("INSERT INTO postlist VALUES(?,?,?,?,?)",index, post.title, post.writer, post.password,new java.sql.Timestamp(System.currentTimeMillis()));
+        jdbcTemplate.update("INSERT INTO postinfo VALUES(?,?)",index, post.text);
         jdbcTemplate.update("update communityinfo set postAmount = ? where postAmount = ?",index + 1,index);
         System.out.println("success");
     }
@@ -33,10 +33,7 @@ public class MainModel {
     } 
     public List<Title> GetPostList(int pageNumber)
     {
-        int postCount = (int)jdbcTemplate.queryForMap("select postAmount from communityinfo").get("postAmount");
-        int l = postCount - 10;
-        int r = postCount - 1;
-        List<Map<String, Object>> result =  jdbcTemplate.queryForList("select postNumber,postTitle,postWriter,uploadDate from postlist where postNumber between ? and ? order by postNumber desc",l,r);
+        List<Map<String, Object>> result =  jdbcTemplate.queryForList("select postNumber,postTitle,postWriter,uploadDate from postlist order by postNumber desc limit 10");
         List<Title> ret = new ArrayList<Title>();
         for (Map<String,Object> cur : result)
         {

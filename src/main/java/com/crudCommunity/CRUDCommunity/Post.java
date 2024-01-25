@@ -7,6 +7,7 @@ public class Post {
     public String writer;
     public String uploadDate;
     public String text;
+    public String password;
     public void SetUploadDate(Timestamp date)
     {
         String currentTime = new java.sql.Timestamp(System.currentTimeMillis()).toString();

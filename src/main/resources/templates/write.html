@@ -34,19 +34,25 @@
 
 <div id="main-bg" class="bg">
     <div id="posts-cover" class="cover">
-        <h1 style="height:150px">게시판</h1>
+        <h1 style="height:50px">게시판</h1>
     </div>
     <div id="write-frame" class="frame">
         <div style="margin: 15px; margin-top: 50px; width: 900px; height: 1800px;">
-            <div id="writer-password-frame" style="display: flex; flex-direction: row; width: 900px; height: 30px;line-height:30px">
-                <div id="writer-info" style="width:50px;border:2px solid black;background-color:#dcdcdc;text-align:center;font-size:12px;">작성자</div>
-                <input type="text" id="writer" style="width:250px;border:2px solid black;border-left:0px;">
-                <div id="password-info" style="margin-left:10px;width:75px;border:2px solid black; background-color:#dcdcdc;text-align:center;font-size:12px;">비밀번호</div>
-                <input type="text" id="password" style="width:200px;border:2px solid black;border-left:0px;">
+            <div id="writer-password-frame" style="display: flex; flex-direction: row; width: 870px; height: 30px;line-height:30px">
+                <div id="writer-info" style="width:50px;border:1px solid #8f8f8f;background-color:#dcdcdc;text-align:center;font-size:12px;">작성자</div>
+                <input type="text" id="writer" style="width:250px;border:1px solid #8f8f8f;border-left:0px;">
+                <div id="password-info" style="margin-left:10px;width:75px;border:1px solid #8f8f8f; background-color:#dcdcdc;text-align:center;font-size:12px;">비밀번호</div>
+                <input type="text" id="password" style="width:200px;border:1px solid #8f8f8f;border-left:0px;">
             </div>
-            <div id="title-frame" style="margin-top:7px;display: flex; flex-direction: row; width: 900px; height:30px; line-height:30px">
-                <div id="title-info" style="width:50px;border:2px solid black; background-color:#dcdcdc;text-align:center;font-size:12px;">제목</div>
-                <input type="text" id="title" style="width:800px;border:2px solid black;border-left:0px;">
+            <div id="title-frame" style="margin-top:7px;display: flex; flex-direction: row; width: 870px; height:30px; line-height:30px">
+                <div id="title-info" style="box-sizing:border-box;width:50px;border:1px solid #8f8f8f; background-color:#dcdcdc;text-align:center;font-size:12px;">제목</div>
+                <input type="text" id="title" style="box-sizing:border-box;width:820px;border:1px solid #8f8f8f;border-left:0px;">
+            </div>
+            <div style="width:870px;;height:500px">
+                <textarea id="text" placeholder="본문 입력" spellcheck="false" style="margin-top:10px;resize:none;box-sizing:border-box;padding:5px;width:870px;height:400px"></textarea>
+                <div id="write-comment-button-container" style="width:150px;height:50px;box-sizing:border-box;display:flex;margin-left:auto;">
+                    <button style="width:100%;text-align:center;" onclick="writePost()">작성</button>
+                </div>
             </div>
         </div>
     </div>
@@ -54,7 +60,28 @@
 
 
 <script>
-
+    async function writePost()
+    {
+        try
+        {
+            const title = document.getElementById("title").value;
+            const writer = document.getElementById("writer").value;
+            const text = document.getElementById("text").value;
+            const password = document.getElementById("password").value;
+            const data = {
+                "title":title,
+                "writer":writer,
+                "text":text,
+                "password":password
+            };
+            await fetch("http://localhost:8080/addpost",{method:"POST",headers:{"Content-Type":"application/json"},body: JSON.stringify(data)});
+            location.href='http://localhost:8080/postlist/0';
+        }
+        catch(error)
+        {
+            console.error(error);
+        }
+    }
 </script>
 
 </body>

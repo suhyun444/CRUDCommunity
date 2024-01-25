@@ -30,14 +30,11 @@ public class MainController {
     {
         return "write";
     }
-    @PostMapping("write")
-    public String write(@RequestParam("postWriter") String postWriter,
-                       @RequestParam("postPassword") String postPassword,
-                       @RequestParam("postTitle") String postTitle,
-                       @RequestParam("postText") String postText)
+    @PostMapping("addpost")
+    public String write(@RequestBody Post post)
     {
         System.out.println("write");
-        mainModel.AddPost(postWriter,postPassword,postTitle,postText);
+        mainModel.AddPost(post);
         return "redirect:postlist/0";
     }
     @GetMapping("postlist")
