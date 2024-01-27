@@ -53,39 +53,35 @@ public class MainController {
         System.out.println("postlist open");
         return "list";
     }
-    @ResponseBody
     @GetMapping("postlistinfo/{pageNumber}")
-    public List<Title> GetPostListInfo(@PathVariable int pageNumber)
+    public ResponseEntity<List<Title>> GetPostListInfo(@PathVariable int pageNumber)
     {
         System.out.println("db open");
         List<Title> result = mainModel.GetPostList(pageNumber);
-        return result;
+        return new ResponseEntity<>(result,HttpStatus.OK);
     }
-    @ResponseBody
     @GetMapping("postinfo/{postId}")
-    public Post GetPostInfo(@PathVariable int postId)
+    public ResponseEntity<Post> GetPostInfo(@PathVariable int postId)
     {
         System.out.println("db open");
         Post result = mainModel.GetPost(postId);
-        return result;
+        return new ResponseEntity<>(result,HttpStatus.OK);
     }
-    @ResponseBody
     @GetMapping("commentinfo/{postId}")
-    public List<Comment> GetCommentInfo(@PathVariable int postId)
+    public ResponseEntity<List<Comment>> GetCommentInfo(@PathVariable int postId)
     {
         System.out.println("db open");
         List<Comment> result = mainModel.GetCommentList(postId);
-        return result;
+        return new ResponseEntity<>(result,HttpStatus.OK);
     }
-    @ResponseBody
     @GetMapping("getpassword/{postId}")
-    public String GetPassword(@PathVariable int postId)
+    public ResponseEntity<String> GetPassword(@PathVariable int postId)
     {
         System.out.println("getpassword");
         //return mainModel.GetPassword(postId);
         String result = mainModel.GetPassword(postId);
         System.out.println(result);
-        return result;
+        return new ResponseEntity<>(result,HttpStatus.OK);
     }
 
     @PostMapping("writecomment")
@@ -98,7 +94,7 @@ public class MainController {
     public ResponseEntity<Integer> DeletePost(@RequestParam int postNumber)
     {
         mainModel.DeletePost(postNumber);
-        return new ResponseEntity<>(postNumber,HttpStatus.CREATED); 
+        return new ResponseEntity<>(postNumber,HttpStatus.OK); 
     }
     
     @PostMapping("addpost")
@@ -111,7 +107,7 @@ public class MainController {
     public ResponseEntity<Post> EditPost(@RequestBody Post post)
     {
         mainModel.EditPost(post);
-        return new ResponseEntity<>(post,HttpStatus.CREATED);
+        return new ResponseEntity<>(post,HttpStatus.OK);
     }
     public static void main(String[] args) {
         SpringApplication.run(MainController.class, args);
