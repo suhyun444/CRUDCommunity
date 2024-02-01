@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -54,44 +55,39 @@ public class MainController {
         return "list";
     }
     @GetMapping("postlistinfo/{pageNumber}")
-    public ResponseEntity<List<Title>> GetPostListInfo(@PathVariable int pageNumber)
+    public ResponseEntity<List<Post>> GetPostListInfo(@PathVariable int pageNumber)
     {
         System.out.println("db open");
-        List<Title> result = mainModel.GetPostList(pageNumber);
+        List<Post> result = mainModel.GetPostList(pageNumber);
         return new ResponseEntity<>(result,HttpStatus.OK);
     }
     @GetMapping("postinfo/{postId}")
-    public ResponseEntity<Post> GetPostInfo(@PathVariable int postId)
+    public ResponseEntity<Post> GetPostInfo(@PathVariable Long postId)
     {
-        System.out.println("db open");
         Post result = mainModel.GetPost(postId);
         return new ResponseEntity<>(result,HttpStatus.OK);
     }
     @GetMapping("commentinfo/{postId}")
-    public ResponseEntity<List<Comment>> GetCommentInfo(@PathVariable int postId)
+    public ResponseEntity<List<Comment>> GetCommentInfo(@PathVariable Long postId)
     {
-        System.out.println("db open");
         List<Comment> result = mainModel.GetCommentList(postId);
         return new ResponseEntity<>(result,HttpStatus.OK);
     }
     @GetMapping("getpassword/{postId}")
-    public ResponseEntity<String> GetPassword(@PathVariable int postId)
+    public ResponseEntity<String> GetPassword(@PathVariable Long postId)
     {
-        System.out.println("getpassword");
-        //return mainModel.GetPassword(postId);
         String result = mainModel.GetPassword(postId);
-        System.out.println(result);
         return new ResponseEntity<>(result,HttpStatus.OK);
     }
 
     @PostMapping("writecomment")
     public ResponseEntity<Comment> WriteComment(@RequestBody Comment comment)
     {
-        mainModel.AddComment(comment.postNumber,comment.comment);
+        mainModel.AddComment(comment);
         return new ResponseEntity<>(comment,HttpStatus.CREATED);
     }
     @PostMapping("deletepost")
-    public ResponseEntity<Integer> DeletePost(@RequestParam int postNumber)
+    public ResponseEntity<Long> DeletePost(@RequestParam Long postNumber)
     {
         mainModel.DeletePost(postNumber);
         return new ResponseEntity<>(postNumber,HttpStatus.OK); 
@@ -99,7 +95,6 @@ public class MainController {
     
     @PostMapping("addpost")
     public ResponseEntity<Post> write(@RequestBody Post post) {
-        System.out.println("write");
         mainModel.AddPost(post);
         return new ResponseEntity<>(post, HttpStatus.CREATED);
     }
@@ -109,6 +104,7 @@ public class MainController {
         mainModel.EditPost(post);
         return new ResponseEntity<>(post,HttpStatus.OK);
     }
+
     public static void main(String[] args) {
         SpringApplication.run(MainController.class, args);
     }

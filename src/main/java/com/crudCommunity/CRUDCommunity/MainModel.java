@@ -1,87 +1,74 @@
 package com.crudCommunity.CRUDCommunity;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Component;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class MainModel {
+    private final PostRepository postRepository;
+    private final CommentRepository commentRepository;
+    private final CommunityRepository communityRepository;
+    
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    public MainModel(PostRepository postRepository, CommentRepository commentRepository, CommunityRepository communityRepository)
+    {
+        this.postRepository = postRepository;
+        this.commentRepository = commentRepository;
+        this.communityRepository = communityRepository;
+    }
     public void AddPost(Post post)
     {
-        int index = (int)jdbcTemplate.queryForMap("select postAmount from communityinfo").get("postAmount");
-        jdbcTemplate.update("INSERT INTO postlist VALUES(?,?,?,?,?)",index, post.title, post.writer, post.password,new java.sql.Timestamp(System.currentTimeMillis()));
-        jdbcTemplate.update("INSERT INTO postinfo VALUES(?,?)",index, post.text);
-        jdbcTemplate.update("update communityinfo set postAmount = ? where postAmount = ?",index + 1,index);
-        System.out.println("success");
+        Community community = communityRepository.findById(0L).get();
+        post.number = community.postAmount++;
+        post.uploadDate = new java.sql.Timestamp(System.currentTimeMillis()).toString();
+        communityRepository.save(community);
+        postRepository.save(post);
     }
-    public void AddComment(int postNumber, String comment)
+    public void AddComment(Comment comment)
     {
-        int index = (int)jdbcTemplate.queryForMap("select commentAmount from communityinfo").get("commentAmount");
-        jdbcTemplate.update("INSERT INTO commentinfo VALUES(?,?,?,?)",index,postNumber,comment,new java.sql.Timestamp(System.currentTimeMillis()));
-        jdbcTemplate.update("update communityinfo set commentAmount = ? where commentAmount = ?",index + 1,index);
-        System.out.println("success");
+        Community community = communityRepository.findById(0L).get();
+        comment.number = community.commentAmount++;
+        comment.uploadDate = new java.sql.Timestamp(System.currentTimeMillis()).toString();
+        communityRepository.save(community);
+        commentRepository.save(comment);
     } 
-    public List<Title> GetPostList(int pageNumber)
+    public List<Post> GetPostList(int pageNumber)
     {
-        List<Map<String, Object>> result =  jdbcTemplate.queryForList("select postNumber,postTitle,postWriter,uploadDate from postlist order by postNumber desc limit 10");
-        List<Title> ret = new ArrayList<Title>();
-        for (Map<String,Object> cur : result)
-        {
-            Title tmp = new Title();
-            tmp.postNumber = (int)cur.get("postNumber");
-            tmp.postTitle = (String)cur.get("postTitle");
-            tmp.postWriter = (String)cur.get("postWriter");
-            tmp.SetUploadDate(Timestamp.valueOf((LocalDateTime)cur.get("uploadDate")));
-            ret.add(tmp);
-        }
+        Page<Post> result = postRepository.findAllByOrderByNumberDesc(PageRequest.of(pageNumber,10));
+        List<Post> ret = result.getContent();
+        for(int i=0;i<ret.size();++i)ret.get(i).SetUploadDate();
         return ret;
     }
-    public String GetPassword(int postId)
+    public String GetPassword(Long postId)
     {
-        return (String)(jdbcTemplate.queryForMap("select postPassword from postlist where postNumber = ?",postId).get("postPassword"));
+        return postRepository.findById(postId).get().password;
     }
-    public void DeletePost(int postNumber)
+    public void DeletePost(Long postNumber)
     {
-        jdbcTemplate.execute("delete from postlist where postNumber = "+postNumber);
+        postRepository.deleteById(postNumber);
     }
-    public List<Comment> GetCommentList(int postNumber)
+    public List<Comment> GetCommentList(Long postNumber)
     {
-        List<Map<String, Object>> result =  jdbcTemplate.queryForList("select postNumber,comment,writeTime from commentinfo where postNumber = ?",postNumber);
-        List<Comment> ret = new ArrayList<Comment>();
-        for (Map<String,Object> cur : result)
-        {
-            Comment tmp = new Comment();
-            tmp.postNumber = (int)cur.get("postNumber");
-            tmp.comment = (String)cur.get("comment");
-            tmp.SetUploadDate(Timestamp.valueOf((LocalDateTime)cur.get("writeTime")));
-            ret.add(tmp);
-        }
-        return ret;
+        List<Comment> result = commentRepository.findAllByPostNumber(postNumber);
+        for(int i=0;i<result.size();++i)result.get(i).SetUploadDate();
+        return result;
     }
-    public Post GetPost(int postId)
+    public Post GetPost(Long postId)
     {
-        Map<String, Object> result =  jdbcTemplate.queryForMap("select postlist.postTitle,postlist.postWriter,postlist.uploadDate,postinfo.postText from postlist join postinfo on postlist.postNumber = postinfo.postNumber where postlist.postNumber = ?",postId);
-        Post ret = new Post();
-        ret.title = (String) result.get("postTitle");
-        ret.writer = (String) result.get("postWriter");
-        ret.text = (String) result.get("postText");
-        ret.SetUploadDate(Timestamp.valueOf((LocalDateTime)result.get("uploadDate")));
-        return ret;
+        Post post = postRepository.findById(postId).get();
+        post.SetUploadDate();
+        return post;
     }
     public void EditPost(Post post)
     {
-        jdbcTemplate.execute("update postlist set postTitle = "+post.title+" where postNumber = "+post.number);
-        jdbcTemplate.execute("update postinfo set postText = "+post.text+" where postNumber = "+post.number);
+        Post temp = postRepository.findById(post.number).get();
+        temp.title = post.title;
+        temp.text = post.text;
+        postRepository.save(temp);
     }
 
 }

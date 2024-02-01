@@ -52,10 +52,10 @@
         titles.forEach(title => {
             const postDiv = document.createElement('div');
             postDiv.classList.add('post');
-            postDiv.setAttribute("onclick", "location.href='http://localhost:8080/post/" + title.postNumber+"'");
+            postDiv.setAttribute("onclick", "location.href='http://localhost:8080/post/" + title.number+"'");
             postDiv.style.cssText = 'cursor:pointer;';
             postDiv.innerHTML = `
-            <span style="display:inline-block; width:80px; text-align:center;">${title.postNumber}</span><span style="display:inline-block; width:485px;text-align:left;">${title.postTitle}</span><span style="display:inline-block; width:215px;text-align:left;">${title.postWriter}</span><span style="display:inline-block; width:100px;text-align:center;">${title.uploadDate}</span>`;
+            <span style="display:inline-block; width:80px; text-align:center;">${title.number}</span><span style="display:inline-block; width:485px;text-align:left;">${title.title}</span><span style="display:inline-block; width:215px;text-align:left;">${title.writer}</span><span style="display:inline-block; width:100px;text-align:center;">${title.dateInfo}</span>`;
             postsContainer.appendChild(postDiv);
         });
     }

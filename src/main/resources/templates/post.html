@@ -94,10 +94,10 @@
         postDiv.innerHTML = `
         <div class="title-frame" style="text-align:left;font-size:20px;"> ${post.title}</div>
         <div class="info-frame">
-        <span style="font-size:12px;display:inline-block;width:680px; text-align:left;">${post.writer}</span><span class="box-container" style="width:50px;" onclick="openBox(1)">수정<div class="overlay-box" id="overlayBox1"><input type="text" id="password1" style="display:flex;width:100px;margin:5px;pointer-events:auto;"placeholder="비밀번호 입력"onclick="stopPropagation()"><button style="width:50px;pointer-events:auto;text-align:center;font-size:12px;margin:5px;" onclick="toEditPage()">확인</button></div></span><span class="box-container" style="width:48px;border-left:1px solid black;border-right:1px solid black;" onclick="openBox(2)">삭제<div class="overlay-box" id="overlayBox2"><input type="text" id="password2" style="display:flex;width:100px;margin:5px;pointer-events:auto;"placeholder="비밀번호 입력"onclick="stopPropagation()"><button style="width:50px;pointer-events:auto;text-align:center;font-size:12px;margin:5px;" onclick="toDeletePage()">확인</button></div></span><span style="font-size:12px;display:inline-block; width:70px;text-align:center;margin-left:5px;">${post.uploadDate}</span>
+        <span style="font-size:12px;display:inline-block;width:680px; text-align:left;">${post.writer}</span><span class="box-container" style="width:50px;" onclick="openBox(1)">수정<div class="overlay-box" id="overlayBox1"><input type="text" id="password1" style="display:flex;width:100px;margin:5px;pointer-events:auto;"placeholder="비밀번호 입력"onclick="stopPropagation()"><button style="width:50px;pointer-events:auto;text-align:center;font-size:12px;margin:5px;" onclick="toEditPage()">확인</button></div></span><span class="box-container" style="width:48px;border-left:1px solid black;border-right:1px solid black;" onclick="openBox(2)">삭제<div class="overlay-box" id="overlayBox2"><input type="text" id="password2" style="display:flex;width:100px;margin:5px;pointer-events:auto;"placeholder="비밀번호 입력"onclick="stopPropagation()"><button style="width:50px;pointer-events:auto;text-align:center;font-size:12px;margin:5px;" onclick="toDeletePage()">확인</button></div></span><span style="font-size:12px;display:inline-block; width:70px;text-align:center;margin-left:5px;">${post.dateInfo}</span>
         </div>
         <div class="text-frame">
-        <span style="display:inline-block;text-align:left;">${post.text} </span>
+        <div style="display:inline-block;text-align:left;">${post.text.replace(/\n/g,'<br>').replace(/ /g,'&nbsp')} </div>
         </div>`;
         postContainer.appendChild(postDiv);
     }
@@ -114,7 +114,7 @@
             const postDiv = document.createElement('div');
             postDiv.style.cssText = 'border-bottom:1px solid #000000; margin-top:15px;'
             postDiv.innerHTML = `
-            <span style="display:inline-block; width:700px; text-align:left;">${comment.comment}</span><span style="display:inline-block; width:170px;text-align:right;">${comment.uploadDate}</span>`;
+            <span style="display:inline-block; width:700px; text-align:left;">${comment.text.replace(/\n/g,'<br>').replace(/ /g,'&nbsp')}</span><span style="display:inline-block; width:170px;text-align:right;">${comment.dateInfo}</span>`;
             commentWrapper.appendChild(postDiv);
         });
     } 
@@ -125,7 +125,7 @@
         const comment = commentInputForm.value;
         var data = {
             "postNumber" : postNumber,
-            "comment": comment
+            "text": comment
         };
         commentInputForm.value = "";
         updateAndRefresh(data);
@@ -160,6 +160,7 @@
         if(input != password)
         {
             //TODO 여기에 비밀번호가 맞지 않습니다 알림 띄우기
+            alert("비밀번호가 올바르지 않습니다.")
             console.log("not correct");
             return;
         }
@@ -173,6 +174,7 @@
         if(input != password)
         {
             //TODO 여기에 비밀번호가 맞지 않습니다 알림 띄우기
+            alert("비밀번호가 올바르지 않습니다.")
             console.log("not correct");
             return;
         }

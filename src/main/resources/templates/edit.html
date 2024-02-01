@@ -66,7 +66,7 @@
                 "text":text
             };
             await fetch("http://localhost:8080/editpost",{method:"POST",headers:{"Content-Type":"application/json"},body: JSON.stringify(data)});
-            location.href='http://localhost:8080/postlist/0';
+            location.href='http://localhost:8080/post/'+postId;
         }
         catch(error)
         {
