@@ -137,27 +137,17 @@
         overlayBox.style.display = (overlayBox.style.display == '') ? 'flex' : '';
         anotherBox.style.display = '';
     }
-    async function getPassword()
-    {
-        console.log(postId);
-        
-        try
-        {
-            const passwordData = await fetch("http://localhost:8080/getpassword/"+postId);
-            const data = await passwordData.json();
-            return data;
-        }
-        catch(error)
-        {
-            console.error(error);
-        }
-    }
+
     async function toEditPage()
     {
         const input = document.getElementById("password1").value;
-        let password;
-        const funcResponse = await getPassword().then(data => {password = data; console.log(data);})
-        if(input != password)
+        var data = {
+            "number" : postId,
+            "password": input
+        };
+        const response = await fetch("http://localhost:8080/checkpassword",{method:"POST",headers:{"Content-Type":"application/json"},body: JSON.stringify(data)});
+        const result = await response.json();
+        if(!result)
         {
             //TODO 여기에 비밀번호가 맞지 않습니다 알림 띄우기
             alert("비밀번호가 올바르지 않습니다.")
@@ -169,9 +159,14 @@
     async function toDeletePage()
     {
         const input = document.getElementById("password2").value;
-        let password;
-        const funcResponse = await getPassword().then(data => {password = data; console.log(data);})
-        if(input != password)
+        var data = {
+            "number" : postId,
+            "password": input
+        };
+        const response = await fetch("http://localhost:8080/checkpassword",{method:"POST",headers:{"Content-Type":"application/json"},body: JSON.stringify(data)});
+        const result = await response.json();
+        //여기에 비밀번호 확인 넣기
+        if(!result)
         {
             //TODO 여기에 비밀번호가 맞지 않습니다 알림 띄우기
             alert("비밀번호가 올바르지 않습니다.")

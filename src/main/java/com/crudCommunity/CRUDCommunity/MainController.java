@@ -1,6 +1,9 @@
 package com.crudCommunity.CRUDCommunity;
 
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.http.HttpStatus;
@@ -40,8 +43,11 @@ public class MainController {
         return "post";
     }
     @GetMapping("edit/{postNumber}")
-    public String EditPostPage(@PathVariable int postNumber)
+    public String EditPostPage(@PathVariable int postNumber, HttpServletRequest request)
     {
+        HttpSession session = request.getSession();
+        if(session.getAttribute("editPermission"+postNumber) == null || !(Boolean)session.getAttribute("editPermission"+postNumber))
+            return "denied";
         return "edit";
     }
 
@@ -105,6 +111,20 @@ public class MainController {
     {
         mainModel.EditPost(post);
         return new ResponseEntity<>(post,HttpStatus.OK);
+    }
+    @PostMapping("checkpassword")
+    public ResponseEntity<Boolean> CheckPassword(@RequestBody Post post, HttpServletRequest request)
+    {
+        Boolean result = false;
+        String password = mainModel.GetPassword(post.number);
+        System.out.println(password + " , " + post.password + "      compare");
+        if(password.equals(post.password))
+        {
+            HttpSession session = request.getSession();
+            session.setAttribute("editPermission"+post.number, true);
+            result = true;
+        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     public static void main(String[] args) {
