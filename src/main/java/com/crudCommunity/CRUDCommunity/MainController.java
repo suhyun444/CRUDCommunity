@@ -6,6 +6,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -31,6 +32,7 @@ public class MainController {
     {
         return "write";
     }
+    
 
     @GetMapping("post/{postNumber}")
     public String GetPostPage(@PathVariable int postNumber)
