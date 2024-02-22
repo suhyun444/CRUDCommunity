@@ -20,6 +20,10 @@ public class MainModel {
         this.commentRepository = commentRepository;
         this.communityRepository = communityRepository;
     }
+    public Long GetPostCount()
+    {
+        return postRepository.countBy();
+    }
     public void AddPost(Post post)
     {
         Community community = communityRepository.findById(0L).get();
@@ -38,7 +42,7 @@ public class MainModel {
     } 
     public List<Post> GetPostList(int pageNumber)
     {
-        Page<Post> result = postRepository.findAllByOrderByNumberDesc(PageRequest.of(pageNumber,10));
+        Page<Post> result = postRepository.findAllByOrderByNumberDesc(PageRequest.of(pageNumber,20));
         List<Post> ret = result.getContent();
         for(int i=0;i<ret.size();++i)ret.get(i).SetUploadDate();
         return ret;
