@@ -22,7 +22,8 @@
         }
         .frame{
             width : 900px;
-            height : 1800px;
+            min-height:1050px;
+            height : fit-content;
             margin:auto;
             border: 1px solid #000000;
             background-color: #FFFFFF;
@@ -74,7 +75,7 @@
             </div>
             <div id="comment-container">
             </div>
-            <div id="write-comment-container" style="margin-top:30px;width:100%;height:250px">
+            <div id="write-comment-container" style="margin-top:30px;width:100%;height:350px">
             <textarea id="comment" name="comment" placeholder="댓글 입력" spellcheck="false" style="resize:none;box-sizing:border-box;padding:5px;width:100%;height:200px"></textarea>
                 <div id="write-comment-button-container" style="width:20%;height:50px;box-sizing:border-box;display:flex;margin-left:auto;">
                     <button style="width:100%;text-align:center;" onclick="writeComment()">작성</button>
