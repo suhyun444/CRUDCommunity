@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" type="text/css" href="/css/frame.css">
     <style>
         .title-frame {
             border-top: 1px solid #000000;
@@ -8,6 +9,8 @@
             background-color: #bbbbbb;
             margin-top: 15px;
             padding: 10px;
+            text-align:left;
+            font-size:20px;
         }
         .info-frame{
             border-bottom: 1px solid #000000;
@@ -20,25 +23,6 @@
             padding: 5px;
             padding-bottom: 50px;
         }
-        .frame{
-            width : 900px;
-            min-height:1050px;
-            height : fit-content;
-            margin:auto;
-            border: 1px solid #000000;
-            background-color: #FFFFFF;
-        }
-        .cover{
-            text-align:center;
-            width : 900px;
-            height : 150px;
-            margin:auto;
-            border: 1px solid #000000;
-            background-color: #FFFFFF;
-        }
-        .bg{
-            background-color: #dcdcdc;
-        }
         .box-container{
             position:relative;
             cursor:pointer;
@@ -46,6 +30,8 @@
             display:inline-block;
             text-align:center;
             user-select:none;
+            width:49px; 
+            border-right:1px solid black;
         }
         .overlay-box{
             position:absolute;
@@ -59,6 +45,79 @@
             height:30px;
             pointer-events: none;
         }
+        .post-frame{
+            margin-left:15px;
+            margin-right:15px;
+            width:870px
+        }
+        .write-comment-frame{
+            margin-top:30px;
+            width:100%;
+            height:350px;
+        }
+        .write-comment-box{
+            resize:none;
+            box-sizing:border-box;
+            padding:5px;
+            width:100%;
+            height:200px
+        }
+        .write-comment-button-frame{
+            width:20%;
+            height:50px;
+            box-sizing:border-box;
+            display:flex;
+            margin-left:auto;
+        }
+        .write-comment-button{
+            width:100%;
+            text-align:center;
+        }
+        .password-input{
+            display:flex;
+            width:100px;
+            margin:5px;
+            pointer-events:auto;
+        }
+        .ok-button{
+            width:50px;
+            pointer-events:auto;
+            text-align:center;
+            font-size:12px;
+            margin:5px;
+        }
+        .date-frame{
+            font-size:12px;
+            display:inline-block; 
+            width:70px;
+            text-align:center;
+            margin-left:5px;
+        }
+        .writer-frame{
+            font-size:12px;
+            display:inline-block;
+            width:680px; 
+            text-align:left;
+        }
+        .text-inside-frame
+        {
+            display:inline-block;
+            text-align:left;
+        }
+        .comment-frame{
+            border-bottom:1px solid #000000; 
+            margin-top:15px;
+        }
+        .comment-text-frame{
+            display:inline-block; 
+            width:700px; 
+            text-align:left;
+        }
+        .comment-date-frame{
+            display:inline-block; 
+            width:170px;
+            text-align:right;
+        }
     </style>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -66,19 +125,19 @@
 <body>
 
 <div id="main-bg" class="bg">
-    <div id="posts-cover" class="cover">
-        <h1 style="height:50px">게시판</h1>
+    <div id="title-cover" class="cover">
+        <h1 class="head-text">게시판</h1>
     </div>
-    <div id="posts-frame" class="frame">
-        <div style="margin-left:15px;margin-right:15px;width:870px">
+    <div id="post-frame" class="frame">
+        <div class="post-frame">
             <div id="post-container">
             </div>
             <div id="comment-container">
             </div>
-            <div id="write-comment-container" style="margin-top:30px;width:100%;height:350px">
-            <textarea id="comment" name="comment" placeholder="댓글 입력" spellcheck="false" style="resize:none;box-sizing:border-box;padding:5px;width:100%;height:200px"></textarea>
-                <div id="write-comment-button-container" style="width:20%;height:50px;box-sizing:border-box;display:flex;margin-left:auto;">
-                    <button style="width:100%;text-align:center;" onclick="writeComment()">작성</button>
+            <div id="write-comment-container" class="write-comment-frame">
+            <textarea id="comment" name="comment" placeholder="댓글 입력" spellcheck="false" class="write-comment-box"></textarea>
+                <div id="write-comment-button-container" class="write-comment-button-frame">
+                    <button class="write-comment-button" onclick="writeComment()">작성</button>
                 </div>
             </div>
         </div>
@@ -93,12 +152,12 @@
         const postContainer = document.getElementById('post-container');
         const postDiv = document.createElement('div');
         postDiv.innerHTML = `
-        <div class="title-frame" style="text-align:left;font-size:20px;"> ${post.title}</div>
+        <div class="title-frame"> ${post.title}</div>
         <div class="info-frame">
-        <span style="font-size:12px;display:inline-block;width:680px; text-align:left;">${post.writer}</span><span class="box-container" style="width:50px;" onclick="openBox(1)">수정<div class="overlay-box" id="overlayBox1"><input type="text" id="password1" style="display:flex;width:100px;margin:5px;pointer-events:auto;"placeholder="비밀번호 입력"onclick="stopPropagation()"><button style="width:50px;pointer-events:auto;text-align:center;font-size:12px;margin:5px;" onclick="toEditPage()">확인</button></div></span><span class="box-container" style="width:48px;border-left:1px solid black;border-right:1px solid black;" onclick="openBox(2)">삭제<div class="overlay-box" id="overlayBox2"><input type="text" id="password2" style="display:flex;width:100px;margin:5px;pointer-events:auto;"placeholder="비밀번호 입력"onclick="stopPropagation()"><button style="width:50px;pointer-events:auto;text-align:center;font-size:12px;margin:5px;" onclick="toDeletePage()">확인</button></div></span><span style="font-size:12px;display:inline-block; width:70px;text-align:center;margin-left:5px;">${post.dateInfo}</span>
+        <span class="writer-frame">${post.writer}</span><span class="box-container" onclick="openBox(1)">수정<div class="overlay-box" id="overlayBox1"><input type="text" id="password1" class="password-input" placeholder="비밀번호 입력"onclick="stopPropagation()"><button class="ok-button" onclick="toEditPage()">확인</button></div></span><span class="box-container" onclick="openBox(2)">삭제<div class="overlay-box" id="overlayBox2"><input type="text" id="password2" class="password-input" placeholder="비밀번호 입력"onclick="stopPropagation()"><button class="ok-button" onclick="toDeletePage()">확인</button></div></span><span class="date-frame">${post.dateInfo}</span>
         </div>
         <div class="text-frame">
-        <div style="display:inline-block;text-align:left;">${post.text.replace(/\n/g,'<br>').replace(/ /g,'&nbsp')} </div>
+        <div class="text-inside-frame">${post.text.replace(/\n/g,'<br>').replace(/ /g,'&nbsp')} </div>
         </div>`;
         postContainer.appendChild(postDiv);
     }
@@ -113,9 +172,9 @@
         commentContainer.appendChild(commentWrapper);
         comments.forEach(comment => {
             const postDiv = document.createElement('div');
-            postDiv.style.cssText = 'border-bottom:1px solid #000000; margin-top:15px;'
+            postDiv.classList.add('comment-frame')
             postDiv.innerHTML = `
-            <span style="display:inline-block; width:700px; text-align:left;">${comment.text.replace(/\n/g,'<br>').replace(/ /g,'&nbsp')}</span><span style="display:inline-block; width:170px;text-align:right;">${comment.dateInfo}</span>`;
+            <span class="comment-text-frame">${comment.text.replace(/\n/g,'<br>').replace(/ /g,'&nbsp')}</span><span class="comment-date-frame">${comment.dateInfo}</span>`;
             commentWrapper.appendChild(postDiv);
         });
     } 

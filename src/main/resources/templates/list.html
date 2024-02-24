@@ -2,29 +2,8 @@
 <html>
 <head>
     <title>게시판</title>
+    <link rel="stylesheet" type="text/css" href="/css/frame.css">
     <style>
-        .post {
-            border-bottom: 1px solid #000000;
-            margin: 5px;
-            padding: 5px;
-        }
-        .frame{
-            width : 900px;
-            height : 830px;
-            margin:auto;
-            border-top: 1px solid #000000;
-            border-left: 1px solid #000000;
-            border-right: 1px solid #000000;
-            background-color: #FFFFFF;
-        }
-        .cover{
-            text-align:center;
-            width : 900px;
-            height : 200px;
-            margin:auto;
-            border: 1px solid #000000;
-            background-color: #FFFFFF;
-        }
         .buttonframe{
             text-align:center;
             width : 900px;
@@ -53,23 +32,52 @@
             border:2px solid #009900;
             
         }
-        .bg{
-            background-color: #dcdcdc;
+        .write-button{
+            cursor:pointer;
+            margin-top:20px;
+            margin-left:780px;
+            width:80px;
+            height:30px;
         }
-
+        .post-info-frame{
+            background-color:#ececec;
+            margin:0px;
+            padding:10px;
+            border-bottom:1px solid #000000;
+        }
+        .info-number-frame{
+            display:inline-block; 
+            width:80px; 
+            text-align:center;
+        }
+        .info-title-frame{
+            display:inline-block; 
+            width:485px;
+            text-align:left;"
+        }
+        .info-writer-frame{
+            display:inline-block; 
+            width:215px;
+            text-align:left;
+        }
+        .info-date-frame{
+            display:inline-block; 
+            width:100px;
+            text-align:center;
+        }
     </style>
 </head>
 <body>
 
 <div id="main-bg" class="bg">
     <div id="posts-cover" class="cover">
-        <h1 style="height:50px">게시판</h1>
-        <button type="button" onclick="location.href='http://localhost:8080/write'" style="cursor:pointer;margin-top:20px;margin-left:780px;width:80px;height:30px;">글 쓰기</button>
+        <h1 class="head-text">게시판</h1>
+        <button type="button" onclick="location.href='http://localhost:8080/write'" class="write-button">글 쓰기</button>
     </div>
     <div id="posts-frame" class="frame">
         <div id="posts-container">
-            <div id="post-info" style="background-color:#ececec;margin:0px;padding:10px;border-bottom:1px solid #000000;">
-                <span style="display:inline-block; width:80px; text-align:center;">번호</span><span style="display:inline-block; width:485px;text-align:left;">제목</span><span style="display:inline-block; width:215px;text-align:left;">작성자</span><span style="display:inline-block; width:100px;text-align:center;">작성일</span>
+            <div id="post-info" class="post-info-frame">
+                <span class="info-number-frame">번호</span><span class="info-title-frame">제목</span><span class="info-writer-frame">작성자</span><span class="info-date-frame">작성일</span>
             </div>
         </div>
     </div>
@@ -87,7 +95,7 @@
             postDiv.setAttribute("onclick", "location.href='http://localhost:8080/post/" + title.number+"'");
             postDiv.style.cssText = 'cursor:pointer;';
             postDiv.innerHTML = `
-            <span style="display:inline-block; width:80px; text-align:center;">${title.number}</span><span style="display:inline-block; width:485px;text-align:left;">${title.title}</span><span style="display:inline-block; width:215px;text-align:left;">${title.writer}</span><span style="display:inline-block; width:100px;text-align:center;">${title.dateInfo}</span>`;
+            <span class="info-number-frame">${title.number}</span><span class="info-title-frame">${title.title}</span><span class="info-writer-frame">${title.writer}</span><span class="info-date-frame">${title.dateInfo}</span>`;
             postsContainer.appendChild(postDiv);
         });
     }
